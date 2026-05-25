@@ -55,30 +55,29 @@ def create_app_icon():
 
 
 def create_menubar_icon():
-    """Creates a clean eighth note icon for the macOS menu bar.
+    """Creates a clean quarter note icon for the macOS menu bar.
 
-    Uses the ♪ glyph from Apple Symbols for pixel-perfect rendering.
-    Renders at high resolution, then downscales to 44×44 (@2x for 22pt).
+    Uses the ♩ glyph from Apple Symbols for pixel-perfect rendering.
+    Renders at high resolution, scaled to 75% within 44×44 (@2x for 22pt).
     """
-    render_size = 352
+    render_size = 400
     final_size = 44
+    scale = 0.75
 
-    font = ImageFont.truetype("/System/Library/Fonts/Apple Symbols.ttf", 320)
+    font = ImageFont.truetype("/System/Library/Fonts/Apple Symbols.ttf", 340)
     img = Image.new("RGBA", (render_size, render_size), (0, 0, 0, 0))
     draw = ImageDraw.Draw(img)
 
-    char = "♪"  # ♪
-    bbox = draw.textbbox((0, 0), char, font=font)
+    bbox = draw.textbbox((0, 0), "♩", font=font)
     w = bbox[2] - bbox[0]
     h = bbox[3] - bbox[1]
     x = (render_size - w) / 2 - bbox[0]
     y = (render_size - h) / 2 - bbox[1]
-    draw.text((x, y), char, fill=(0, 0, 0, 255), font=font)
+    draw.text((x, y), "♩", fill=(0, 0, 0, 255), font=font)
 
-    # Crop to content with small padding, then make square
     content_bbox = img.getbbox()
     if content_bbox:
-        pad = 10
+        pad = 4
         crop = (
             max(0, content_bbox[0] - pad),
             max(0, content_bbox[1] - pad),
@@ -92,7 +91,12 @@ def create_menubar_icon():
     square = Image.new("RGBA", (side, side), (0, 0, 0, 0))
     square.paste(img, ((side - w) // 2, (side - h) // 2))
 
-    return square.resize((final_size, final_size), Image.LANCZOS)
+    icon_px = int(final_size * scale)
+    scaled = square.resize((icon_px, icon_px), Image.LANCZOS)
+    result = Image.new("RGBA", (final_size, final_size), (0, 0, 0, 0))
+    offset = (final_size - icon_px) // 2
+    result.paste(scaled, (offset, offset))
+    return result
 
 
 def save_iconset(img, output_dir):
