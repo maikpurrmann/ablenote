@@ -2,7 +2,6 @@
 """Creates the Ablenote app icon (Ableton-style) and menu bar icon."""
 
 from PIL import Image, ImageDraw, ImageFont
-import math
 import os
 
 
@@ -58,60 +57,42 @@ def create_app_icon():
 def create_menubar_icon():
     """Creates a clean eighth note icon for the macOS menu bar.
 
-    Renders at 8x size (352×352) for smooth anti-aliasing, then
-    downscales to 44×44 (@2x for 22pt menu bar).
+    Uses the ♪ glyph from Apple Symbols for pixel-perfect rendering.
+    Renders at high resolution, then downscales to 44×44 (@2x for 22pt).
     """
     render_size = 352
     final_size = 44
+
+    font = ImageFont.truetype("/System/Library/Fonts/Apple Symbols.ttf", 320)
     img = Image.new("RGBA", (render_size, render_size), (0, 0, 0, 0))
     draw = ImageDraw.Draw(img)
 
-    color = (0, 0, 0, 255)
+    char = "♪"  # ♪
+    bbox = draw.textbbox((0, 0), char, font=font)
+    w = bbox[2] - bbox[0]
+    h = bbox[3] - bbox[1]
+    x = (render_size - w) / 2 - bbox[0]
+    y = (render_size - h) / 2 - bbox[1]
+    draw.text((x, y), char, fill=(0, 0, 0, 255), font=font)
 
-    # Note head (filled ellipse, tilted ~30°)
-    head_cx, head_cy = 130, 270
-    head_rx, head_ry = 52, 38
-
-    points = []
-    angle_offset = math.radians(-30)
-    for i in range(64):
-        theta = 2 * math.pi * i / 64
-        px = head_rx * math.cos(theta)
-        py = head_ry * math.sin(theta)
-        rx = px * math.cos(angle_offset) - py * math.sin(angle_offset)
-        ry = px * math.sin(angle_offset) + py * math.cos(angle_offset)
-        points.append((head_cx + rx, head_cy + ry))
-    draw.polygon(points, fill=color)
-
-    # Stem (vertical line from note head up)
-    stem_x = head_cx + head_rx * math.cos(angle_offset) - 4
-    stem_bottom = head_cy - head_ry * math.sin(angle_offset) + 5
-    stem_top = 60
-    stem_width = 14
-    draw.rectangle(
-        [stem_x, stem_top, stem_x + stem_width, stem_bottom],
-        fill=color,
-    )
-
-    # Flag (curved stroke from top of stem)
-    flag_start_x = stem_x + stem_width
-    flag_start_y = stem_top
-
-    for i in range(100):
-        t = i / 99.0
-        # Bezier curve for the flag
-        x = flag_start_x + t * 90 * math.sin(t * math.pi * 0.6)
-        y = flag_start_y + t * 130
-        thickness = 14 * (1 - t * 0.6)
-        draw.ellipse(
-            [x - thickness / 2, y - thickness / 2,
-             x + thickness / 2, y + thickness / 2],
-            fill=color,
+    # Crop to content with small padding, then make square
+    content_bbox = img.getbbox()
+    if content_bbox:
+        pad = 10
+        crop = (
+            max(0, content_bbox[0] - pad),
+            max(0, content_bbox[1] - pad),
+            min(render_size, content_bbox[2] + pad),
+            min(render_size, content_bbox[3] + pad),
         )
+        img = img.crop(crop)
 
-    # Downscale with high-quality resampling
-    img = img.resize((final_size, final_size), Image.LANCZOS)
-    return img
+    w, h = img.size
+    side = max(w, h)
+    square = Image.new("RGBA", (side, side), (0, 0, 0, 0))
+    square.paste(img, ((side - w) // 2, (side - h) // 2))
+
+    return square.resize((final_size, final_size), Image.LANCZOS)
 
 
 def save_iconset(img, output_dir):
