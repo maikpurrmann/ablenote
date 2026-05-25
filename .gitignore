@@ -1,0 +1,11 @@
+config.json
+STORY.md
+CLAUDE.md
+.claude/
+Ablenote.app/
+__pycache__/
+*.pyc
+.DS_Store
+icon_preview.png
+Ablenote.icns
+*.iconset/

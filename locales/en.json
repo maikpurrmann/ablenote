@@ -1,0 +1,48 @@
+{
+  "app_title": "Ablenote",
+  "setup_title": "Ablenote Setup",
+  "setup_description": "Ablenote – Quick notes from Ableton Live",
+  "setup_detail": "Creates Markdown notes with track, clip, scene and tempo directly in your Obsidian vault.",
+  "credits": "by Maik Purrmann — github.com/maikpurrmann/ablenote",
+
+  "folder_label": "Folder: {path}",
+  "folder_not_set": "No folder configured yet.",
+  "autostart_label": "Autostart with Ableton: {status}",
+  "on": "On",
+  "off": "Off",
+
+  "btn_close": "Close",
+  "btn_autostart_on": "Autostart On",
+  "btn_autostart_off": "Autostart Off",
+  "btn_choose_folder": "Choose Folder",
+  "btn_cancel": "Cancel",
+  "btn_save": "Save",
+  "btn_task": "Task",
+  "btn_note": "Note",
+
+  "choose_folder_prompt": "Choose a folder:",
+  "choose_folder_setup": "Where should Ablenote save notes?",
+  "notification_saved": "{label} saved: {filename}",
+  "notification_autostart_on": "Autostart enabled – starts with Ableton",
+  "notification_autostart_off": "Autostart disabled",
+  "notification_setup_first": "Please run Ablenote Setup first.",
+  "notification_folder_set": "Notes will be saved to: {folder}",
+
+  "dialog_your_note": "Your note:",
+  "dialog_your_task": "Your task:",
+  "dialog_choose_folder_title": "Ablenote – Folder",
+  "dialog_choose_folder_prompt": "Save to which folder?",
+
+  "context_project": "Project: {project}",
+  "context_track": "Track: {track}",
+  "context_clip": "Clip: {clip}",
+  "context_unknown": "(Ableton not detected)",
+
+  "meta_bar": "Bar {bar}",
+  "meta_file": "File: {name}",
+  "label_task": "Task",
+  "label_note": "Note",
+
+  "menu_new_note": "New Note",
+  "menu_settings": "Settings…"
+}
