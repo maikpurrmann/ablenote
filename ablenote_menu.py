@@ -16,9 +16,10 @@ except Exception:
 import rumps
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
-ABLENOTE_SCRIPT = os.path.join(SCRIPT_DIR, "ablenote.py")
+PROJECT_DIR = SCRIPT_DIR
+ABLENOTE_SCRIPT = os.path.join(PROJECT_DIR, "ablenote.py")
 ICON_PATH = os.path.join(SCRIPT_DIR, "icon_menubar.png")
-CONFIG_PATH = os.path.join(SCRIPT_DIR, "config.json")
+CONFIG_PATH = os.path.join(PROJECT_DIR, "config.json")
 
 
 def _load_locale():

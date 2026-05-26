@@ -185,6 +185,7 @@ rm -rf /path/to/ablenote
 - The icon only appears when Ableton is running with the Remote Script active
 - Check if the watcher is running: `pgrep -f ablenote_watcher`
 - Try enabling autostart: `python3 ablenote.py --setup`
+- If the repo is in iCloud Drive: grant Full Disk Access to Python in System Settings → Privacy & Security → Full Disk Access (background processes can't access iCloud files without it)
 
 **"Ableton not detected" in dialog**
 - The Remote Script might not be activated. Go to Preferences → Link, Tempo & MIDI → Control Surface → Ablenote

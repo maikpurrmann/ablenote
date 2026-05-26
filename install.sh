@@ -79,7 +79,28 @@ else
 fi
 echo ""
 
-# ── 5. Copy example config if none exists ─────────────────────────────────
+# ── 5. Install runtime files for background watcher ──────────────────────
+
+RUNTIME_DIR="$HOME/.ablenote"
+echo "Installing background watcher to:"
+echo "  $RUNTIME_DIR"
+mkdir -p "$RUNTIME_DIR/locales"
+cp "$SCRIPT_DIR/ablenote_watcher.py" "$RUNTIME_DIR/"
+cp "$SCRIPT_DIR/ablenote_menu.py" "$RUNTIME_DIR/"
+cp "$SCRIPT_DIR/i18n.py" "$RUNTIME_DIR/"
+cp "$SCRIPT_DIR/locales/"*.json "$RUNTIME_DIR/locales/"
+cp "$SCRIPT_DIR/icon_menubar.png" "$RUNTIME_DIR/"
+
+# Patch menu script to reference the project directory for main script + config
+sed -i '' "s|^PROJECT_DIR = .*|PROJECT_DIR = \"$SCRIPT_DIR\"|" "$RUNTIME_DIR/ablenote_menu.py" 2>/dev/null
+if ! grep -q "^PROJECT_DIR" "$RUNTIME_DIR/ablenote_menu.py"; then
+    sed -i '' "s|^ABLENOTE_SCRIPT = .*|ABLENOTE_SCRIPT = \"$ABLENOTE_SCRIPT\"|" "$RUNTIME_DIR/ablenote_menu.py"
+    sed -i '' "s|^CONFIG_PATH = .*|CONFIG_PATH = \"$SCRIPT_DIR/config.json\"|" "$RUNTIME_DIR/ablenote_menu.py"
+fi
+echo "  Background watcher ✓"
+echo ""
+
+# ── 6. Copy example config if none exists ─────────────────────────────────
 
 if [ ! -f "$SCRIPT_DIR/config.json" ]; then
     if [ -f "$SCRIPT_DIR/config.example.json" ]; then
@@ -87,7 +108,7 @@ if [ ! -f "$SCRIPT_DIR/config.json" ]; then
     fi
 fi
 
-# ── 6. Offer to run setup ────────────────────────────────────────────────
+# ── 7. Offer to run setup ────────────────────────────────────────────────
 
 echo "=== Installation complete! ==="
 echo ""
